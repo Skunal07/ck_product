@@ -1,2 +1,38 @@
 2023-01-30 06:18:29 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
 2023-01-30 07:36:31 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-30 08:59:09 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-30 09:20:37 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-30 09:21:43 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-30 09:21:55 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-30 09:22:04 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-30 09:22:15 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-30 09:22:15 error: [Cake\Database\Exception\DatabaseException] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ck_product.product_comment' doesn't exist in /var/www/html/ck_product/vendor/cakephp/cakephp/src/Database/Schema/Collection.php on line 160
+Stack Trace:
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Database/Schema/Collection.php:118
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/ORM/Table.php:521
+- /var/www/html/ck_product/vendor/cakephp/bake/src/Command/ModelCommand.php:111
+- /var/www/html/ck_product/vendor/cakephp/bake/src/Command/ModelCommand.php:94
+- /var/www/html/ck_product/vendor/cakephp/bake/src/Command/AllCommand.php:115
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Console/BaseCommand.php:189
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Console/CommandRunner.php:334
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Console/CommandRunner.php:172
+- /var/www/html/ck_product/bin/cake.php:12
+
+Caused by: [PDOException] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ck_product.product_comment' doesn't exist in /var/www/html/ck_product/vendor/cakephp/cakephp/src/Database/Statement/MysqlStatement.php on line 39
+Stack Trace:
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Database/Statement/MysqlStatement.php:39
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Database/Connection.php:329
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Core/Retry/CommandRetry.php:70
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Database/Connection.php:332
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Database/Schema/Collection.php:158
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Database/Schema/Collection.php:118
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/ORM/Table.php:521
+- /var/www/html/ck_product/vendor/cakephp/bake/src/Command/ModelCommand.php:111
+- /var/www/html/ck_product/vendor/cakephp/bake/src/Command/ModelCommand.php:94
+- /var/www/html/ck_product/vendor/cakephp/bake/src/Command/AllCommand.php:115
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Console/BaseCommand.php:189
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Console/CommandRunner.php:334
+- /var/www/html/ck_product/vendor/cakephp/cakephp/src/Console/CommandRunner.php:172
+- /var/www/html/ck_product/bin/cake.php:12
+
+2023-01-30 09:22:18 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
