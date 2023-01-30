@@ -32,8 +32,8 @@ class UserProfileFixture extends TestFixture
                 'contact' => 'Lorem ip',
                 'address' => 'Lorem ipsum dolor sit amet',
                 'profile_image' => 'Lorem ipsum dolor sit amet',
-                'created_date' => '2023-01-30 09:21:43',
-                'modified_date' => '2023-01-30 09:21:43',
+                'created_date' => '2023-01-30 12:34:35',
+                'modified_date' => '2023-01-30 12:34:35',
             ],
         ];
         parent::init();

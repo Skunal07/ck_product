@@ -10,13 +10,13 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property int $user_id
- * @property string $first_name
- * @property string $last_name
- * @property string $contact
- * @property string $address
- * @property string $profile_image
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $contact
+ * @property string|null $address
+ * @property string|null $profile_image
  * @property \Cake\I18n\FrozenTime $created_date
- * @property \Cake\I18n\FrozenTime $modified_date
+ * @property \Cake\I18n\FrozenTime|null $modified_date
  *
  * @property \App\Model\Entity\User $user
  */
@@ -38,8 +38,6 @@ class UserProfile extends Entity
         'contact' => true,
         'address' => true,
         'profile_image' => true,
-        'created_date' => true,
-        'modified_date' => true,
         'user' => true,
     ];
 }

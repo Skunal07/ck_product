@@ -13,12 +13,19 @@
     </aside>
     <div class="column-responsive column-80">
         <div class="users form content">
-            <?= $this->Form->create($user) ?>
+            <?= $this->Form->create($user) ;
+            // print_r($user);
+            ?>
             <fieldset>
                 <legend><?= __('Add User') ?></legend>
                 <?php
                     echo $this->Form->control('email');
                     echo $this->Form->control('password');
+                    echo $this->Form->control('user_profile.first_name');
+                    echo $this->Form->control('user_profile.last_name');
+                    echo $this->Form->control('user_profile.contact');
+                    echo $this->Form->control('user_profile.address');
+                    echo $this->Form->control('user_profile.profile_image');
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>

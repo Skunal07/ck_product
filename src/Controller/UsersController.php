@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\ORM\TableRegistry;
 /**
  * Users Controller
  *
@@ -16,7 +17,15 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index()
+    public function initialize(): void
+    {
+        $this->loadComponent('Authentication.Authentication');
+        $this->Model = $this->loadModel('UserProfile');
+        $this->loadComponent('Flash');
+        // $this->loadComponent('Rahul');        
+    }
+   
+     public function index()
     {
         $users = $this->paginate($this->Users);
 
@@ -48,17 +57,55 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            // print_r($user);die;
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
+                    // $email = $this->request->getData('email');
+                    $user = $this->Users->patchEntity($user, $this->request->getData());
+                    if ($this->Users->save($user)) {
+                        // $users = TableRegistry::get("Users");
+                        // $result = $users->find('all')->where(['email' => $email])->first();
+        
+                        // $user2 = $this->UserProfile->newEmptyEntity();
+                        // $data = $this->request->getData();
+                        // $data['user_id'] = $result['id'];
+                                    // echo '<pre>';
+                                    // print_r($data);die;
+                                 
+                        // $user2 = $this->UserProfile->patchEntity($user);
+                        if ($this->UserProfile->save($user)) {
+                            $this->Flash->success(__('The user has been saved.'));
+                            return $this->redirect(['action' => 'index']);
+                        }
+                        $this->Flash->error(__('The user could not be saved. Please, try again.details'));
+                    }
+                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                }
         $this->set(compact('user'));
     }
+
+    // public function add()
+    // {
+    //     $user = $this->Users->newEmptyEntity();
+    //     if ($this->request->is('post')) {
+    //         $email = $this->request->getData('email');
+    //         $user = $this->Users->patchEntity($user, $this->request->getData());
+    //         if ($this->Users->save($user)) {
+                
+    //             // $users = TableRegistry::get("Users");
+    //             $result = $this->Users->find('all')->where(['email' => $email])->first();
+                
+    //             $user2 = $this->UserProfile->newEmptyEntity();
+    //             $data = $this->request->getData();
+    //             $data['user_id'] = $result['id'];
+    //             $user2 = $this->UserProfile->patchEntity($user2, $data);
+    //             if ($this->UserProfile->save($user2)) {
+    //                 $this->Flash->success(__('The user has been saved.'));
+    //                 return $this->redirect(['action' => 'index']);
+    //             }
+    //             $this->Flash->error(__('The user could not be saved. Please, try again.details'));
+    //         }
+    //           $this->Flash->error(__('The user could not be saved. Please, try again.'));
+    //     }
+    //     $this->set(compact('user'));
+    // }
 
     /**
      * Edit method
@@ -110,7 +157,7 @@ class UsersController extends AppController
     parent::beforeFilter($event);
     // Configure the login action to not require authentication, preventing
     // the infinite redirect loop issue
-    $this->Authentication->addUnauthenticatedActions(['login']);
+    $this->Authentication->addUnauthenticatedActions(['login','add']);
 }
     // ===================login=====================
 

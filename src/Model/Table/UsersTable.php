@@ -47,9 +47,10 @@ class UsersTable extends Table
         $this->hasMany('ProductComments', [
             'foreignKey' => 'user_id',
         ]);
-        $this->hasMany('UserProfile', [
-            'foreignKey' => 'user_id',
-        ]);
+        // $this->hasMany('UserProfile', [
+        //     'foreignKey' => 'user_id',
+        // ]);
+        $this->hasOne('UserProfile');
     }
 
     /**

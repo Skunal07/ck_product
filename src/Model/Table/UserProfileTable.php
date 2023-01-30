@@ -64,32 +64,27 @@ class UserProfileTable extends Table
         $validator
             ->scalar('first_name')
             ->maxLength('first_name', 50)
-            ->requirePresence('first_name', 'create')
-            ->notEmptyString('first_name');
+            ->allowEmptyString('first_name');
 
         $validator
             ->scalar('last_name')
             ->maxLength('last_name', 50)
-            ->requirePresence('last_name', 'create')
-            ->notEmptyString('last_name');
+            ->allowEmptyString('last_name');
 
         $validator
             ->scalar('contact')
             ->maxLength('contact', 10)
-            ->requirePresence('contact', 'create')
-            ->notEmptyString('contact');
+            ->allowEmptyString('contact');
 
         $validator
             ->scalar('address')
             ->maxLength('address', 100)
-            ->requirePresence('address', 'create')
-            ->notEmptyString('address');
+            ->allowEmptyString('address');
 
         $validator
             ->scalar('profile_image')
             ->maxLength('profile_image', 100)
-            ->requirePresence('profile_image', 'create')
-            ->notEmptyFile('profile_image');
+            ->allowEmptyFile('profile_image');
 
         $validator
             ->dateTime('created_date')
@@ -97,8 +92,7 @@ class UserProfileTable extends Table
 
         $validator
             ->dateTime('modified_date')
-            ->requirePresence('modified_date', 'create')
-            ->notEmptyDateTime('modified_date');
+            ->allowEmptyDateTime('modified_date');
 
         return $validator;
     }
