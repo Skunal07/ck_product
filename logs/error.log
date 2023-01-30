@@ -1,0 +1,22 @@
+2023-01-30 06:18:30 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-30 06:18:31 error: [Cake\Database\Exception\MissingExtensionException] Database driver Cake\Database\Driver\Sqlite cannot be used due to a missing PHP extension or unmet dependency. Requested by connection "test" in /var/www/html/cakephp_product/vendor/cakephp/cakephp/src/Database/Connection.php on line 223
+Exception Attributes: array (
+  'driver' => 'Cake\\Database\\Driver\\Sqlite',
+  'name' => 'test',
+)
+Stack Trace:
+- /var/www/html/cakephp_product/vendor/cakephp/cakephp/src/Database/Connection.php:146
+- /var/www/html/cakephp_product/vendor/cakephp/cakephp/src/Datasource/ConnectionRegistry.php:89
+- /var/www/html/cakephp_product/vendor/cakephp/cakephp/src/Core/ObjectRegistry.php:110
+- /var/www/html/cakephp_product/vendor/cakephp/cakephp/src/Datasource/ConnectionManager.php:204
+- /var/www/html/cakephp_product/vendor/cakephp/debug_kit/src/Panel/SqlLogPanel.php:53
+- /var/www/html/cakephp_product/vendor/cakephp/debug_kit/src/ToolbarService.php:224
+- /var/www/html/cakephp_product/vendor/cakephp/debug_kit/src/Middleware/DebugKitMiddleware.php:58
+- /var/www/html/cakephp_product/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /var/www/html/cakephp_product/vendor/cakephp/cakephp/src/Http/Runner.php:58
+- /var/www/html/cakephp_product/vendor/cakephp/cakephp/src/Http/Server.php:90
+- /var/www/html/cakephp_product/webroot/index.php:40
+
+2023-01-30 06:19:44 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-30 06:19:44 warning: Unable to save request. Check your debug_kit datasource connection or ensure that PDO SQLite extension is enabled.
+2023-01-30 06:19:44 warning: The datasource configuration "debug_kit" was not found.
