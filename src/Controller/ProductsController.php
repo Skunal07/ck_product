@@ -16,6 +16,15 @@ class ProductsController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
+    public function initialize(): void
+    {
+        $this->loadComponent('Authentication.Authentication');
+        $this->Model = $this->loadModel('ProductCategories');
+        $this->loadComponent('Flash');
+        $this->viewBuilder()->setLayout('mydefault');
+        // $this->loadComponent('Rahul');        
+    }
+
     public function index()
     {
         $this->paginate = [
@@ -27,13 +36,25 @@ class ProductsController extends AppController
     }
     public function productcategories()
     {
-        $this->viewBuilder()->setLayout('mydefault');
         $this->paginate = [
             'contain' => ['ProductCategories'],
         ];
-        $products = $this->paginate($this->Products);
+        $this->paginate = [
+            'contain' => [],
+        ];
+        $key = $this->request->getQuery('key');
+        if($key){
+            $query =$this->Products->find('all')
+                ->where(['Or'=>['product_title like'=>'%'.$key.'%','product_tags like'=>'%'.$key.'%']]);
+        }else{
+            $query=$this->Products;
+        }
+        $products = $this->paginate($query);
+        $productc = $this->paginate($this->ProductCategories);
+        // echo '<pre>';
+        // print_r($productc);die;
 
-        $this->set(compact('products'));
+        $this->set(compact('products','productc'));
     }
 
     /**

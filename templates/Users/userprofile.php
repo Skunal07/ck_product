@@ -14,8 +14,8 @@
                 </h3>
                 <h6>
                 </h6>
-                <h6 class="proile-rating">Total No Of Posts: <span>
-                    </span></h6>
+                <!-- <h6 class="proile-rating">Total No Of Posts: <span>
+                    </span></h6> -->
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
                         <span class="nav-link active" id="About" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">About</span>

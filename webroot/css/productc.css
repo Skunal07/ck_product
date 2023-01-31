@@ -484,7 +484,10 @@ body {
   .footer {
     padding: 0 0 4rem 0;
   }
-  
+  .aimage{
+  width: 100%;
+  height: 300px;
+  }
   .footer a {
     color: #000;
   }
