@@ -43,7 +43,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
    
 </head>
 <body>
-        <div class="container-fluid">
+        <div class="container-fluid ">
             <?= $this->Flash->render() ?>
             <?= $this->fetch('content') ?>
         </div>

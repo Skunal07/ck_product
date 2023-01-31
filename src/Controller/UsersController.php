@@ -56,26 +56,26 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
+
+    // ==================signup page ==================
+
     public function add()
     {
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
-            // $email = $this->request->getData('email');
             $data = $this->request->getData();
+            // ==========add image ===============
             $productImage = $this->request->getData("user_profile.profile_image");
-            // echo '<pre>';
-            // print_r($data);
-            // echo($data['profile_image']);die;
             $fileName = $productImage->getClientFilename();
             $data["user_profile"]["profile_image"] = $fileName;
-            $user = $this->Users->patchEntity($user,$data);
+            $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 if ($this->UserProfile->save($user)) {
                     $hasFileError = $productImage->getError();
 
                     if ($hasFileError > 0) {
                         // no file uploaded
-                        $data["user_profile.profile_image"] = "";
+                        $data["user_profile"]["profile_image"] = "";
                     } else {
                         // file uploaded
                         $fileType = $productImage->getClientMediaType();
@@ -89,13 +89,12 @@ class UsersController extends AppController
                     $this->Flash->success(__('The user has been saved.'));
                     return $this->redirect(['action' => 'index']);
                 }
-                $this->Flash->error(__('The user could not be saved. Please, try again.details'));
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
     }
-   
+
 
     /**
      * Edit method
@@ -159,7 +158,7 @@ class UsersController extends AppController
         if ($result->isValid()) {
             // redirect to /articles after login success
             $redirect = $this->request->getQuery('redirect', [
-                'controller' => 'products',
+                'controller' => 'Products',
                 'action' => 'index',
             ]);
 
@@ -179,5 +178,30 @@ class UsersController extends AppController
             $this->Authentication->logout();
             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
         }
+    }
+
+    // ==================user profile =======================
+    public function userprofile($id = null)
+    {
+        $user = $this->Authentication->getIdentity();
+        $uid = $user->id;
+        // echo $uid;
+        if ($user->user_type == 0) {
+            $user = $this->Users->get($uid, [
+                'contain' => ['UserProfile'],
+            ]);
+        } else if ($user->user_type == 1) {
+            $user = $this->Users->get($id, [
+                'contain' => ['UserProfile'],
+            ]);
+        }
+        // echo '<pre>';
+        // print_r($user);die;
+        // $post=TableRegistry::get("Posts");
+        // $count = $this->Posts->find()->where(['user_id' => $id])->count();
+        // echo '<pre>';
+        // print_r($user);
+        // die;
+        $this->set(compact('user', 'uid'));
     }
 }
