@@ -65,3 +65,4 @@ Stack Trace:
 - /var/www/html/ck_product/bin/cake.php:12
 
 2023-01-30 12:34:33 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2023-01-31 03:43:15 warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.

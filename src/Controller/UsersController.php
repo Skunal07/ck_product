@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
 
 use Cake\ORM\TableRegistry;
+
 /**
  * Users Controller
  *
@@ -22,10 +24,11 @@ class UsersController extends AppController
         $this->loadComponent('Authentication.Authentication');
         $this->Model = $this->loadModel('UserProfile');
         $this->loadComponent('Flash');
+        $this->viewBuilder()->setLayout('mydefault');
         // $this->loadComponent('Rahul');        
     }
-   
-     public function index()
+
+    public function index()
     {
         $users = $this->paginate($this->Users);
 
@@ -57,55 +60,42 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
-                    // $email = $this->request->getData('email');
-                    $user = $this->Users->patchEntity($user, $this->request->getData());
-                    if ($this->Users->save($user)) {
-                        // $users = TableRegistry::get("Users");
-                        // $result = $users->find('all')->where(['email' => $email])->first();
-        
-                        // $user2 = $this->UserProfile->newEmptyEntity();
-                        // $data = $this->request->getData();
-                        // $data['user_id'] = $result['id'];
-                                    // echo '<pre>';
-                                    // print_r($data);die;
-                                 
-                        // $user2 = $this->UserProfile->patchEntity($user);
-                        if ($this->UserProfile->save($user)) {
-                            $this->Flash->success(__('The user has been saved.'));
-                            return $this->redirect(['action' => 'index']);
+            // $email = $this->request->getData('email');
+            $data = $this->request->getData();
+            $productImage = $this->request->getData("user_profile.profile_image");
+            // echo '<pre>';
+            // print_r($data);
+            // echo($data['profile_image']);die;
+            $fileName = $productImage->getClientFilename();
+            $data["user_profile"]["profile_image"] = $fileName;
+            $user = $this->Users->patchEntity($user,$data);
+            if ($this->Users->save($user)) {
+                if ($this->UserProfile->save($user)) {
+                    $hasFileError = $productImage->getError();
+
+                    if ($hasFileError > 0) {
+                        // no file uploaded
+                        $data["user_profile.profile_image"] = "";
+                    } else {
+                        // file uploaded
+                        $fileType = $productImage->getClientMediaType();
+
+                        if ($fileType == "image/png" || $fileType == "image/jpeg" || $fileType == "image/jpg") {
+                            $imagePath = WWW_ROOT . "img/" . $fileName;
+                            $productImage->moveTo($imagePath);
+                            $data["user_profile"]["profile_image"] = $fileName;
                         }
-                        $this->Flash->error(__('The user could not be saved. Please, try again.details'));
                     }
-                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                    $this->Flash->success(__('The user has been saved.'));
+                    return $this->redirect(['action' => 'index']);
                 }
+                $this->Flash->error(__('The user could not be saved. Please, try again.details'));
+            }
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        }
         $this->set(compact('user'));
     }
-
-    // public function add()
-    // {
-    //     $user = $this->Users->newEmptyEntity();
-    //     if ($this->request->is('post')) {
-    //         $email = $this->request->getData('email');
-    //         $user = $this->Users->patchEntity($user, $this->request->getData());
-    //         if ($this->Users->save($user)) {
-                
-    //             // $users = TableRegistry::get("Users");
-    //             $result = $this->Users->find('all')->where(['email' => $email])->first();
-                
-    //             $user2 = $this->UserProfile->newEmptyEntity();
-    //             $data = $this->request->getData();
-    //             $data['user_id'] = $result['id'];
-    //             $user2 = $this->UserProfile->patchEntity($user2, $data);
-    //             if ($this->UserProfile->save($user2)) {
-    //                 $this->Flash->success(__('The user has been saved.'));
-    //                 return $this->redirect(['action' => 'index']);
-    //             }
-    //             $this->Flash->error(__('The user could not be saved. Please, try again.details'));
-    //         }
-    //           $this->Flash->error(__('The user could not be saved. Please, try again.'));
-    //     }
-    //     $this->set(compact('user'));
-    // }
+   
 
     /**
      * Edit method
@@ -153,42 +143,41 @@ class UsersController extends AppController
 
     // ===================before login =====================
     public function beforeFilter(\Cake\Event\EventInterface $event)
-{
-    parent::beforeFilter($event);
-    // Configure the login action to not require authentication, preventing
-    // the infinite redirect loop issue
-    $this->Authentication->addUnauthenticatedActions(['login','add']);
-}
+    {
+        parent::beforeFilter($event);
+        // Configure the login action to not require authentication, preventing
+        // the infinite redirect loop issue
+        $this->Authentication->addUnauthenticatedActions(['login', 'add']);
+    }
     // ===================login=====================
 
-public function login()
-{
-    $this->request->allowMethod(['get', 'post']);
-    $result = $this->Authentication->getResult();
-    // regardless of POST or GET, redirect if user is logged in
-    if ($result->isValid()) {
-        // redirect to /articles after login success
-        $redirect = $this->request->getQuery('redirect', [
-            'controller' => 'products',
-            'action' => 'index',
-        ]);
+    public function login()
+    {
+        $this->request->allowMethod(['get', 'post']);
+        $result = $this->Authentication->getResult();
+        // regardless of POST or GET, redirect if user is logged in
+        if ($result->isValid()) {
+            // redirect to /articles after login success
+            $redirect = $this->request->getQuery('redirect', [
+                'controller' => 'products',
+                'action' => 'index',
+            ]);
 
-        return $this->redirect($redirect);
+            return $this->redirect($redirect);
+        }
+        // display error if user submitted and authentication failed
+        if ($this->request->is('post') && !$result->isValid()) {
+            $this->Flash->error(__('Invalid email or password'));
+        }
     }
-    // display error if user submitted and authentication failed
-    if ($this->request->is('post') && !$result->isValid()) {
-        $this->Flash->error(__('Invalid email or password'));
+    // ========================logout ============================
+    public function logout()
+    {
+        $result = $this->Authentication->getResult();
+        // regardless of POST or GET, redirect if user is logged in
+        if ($result->isValid()) {
+            $this->Authentication->logout();
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
     }
-}
-// ========================logout ============================
-public function logout()
-{
-    $result = $this->Authentication->getResult();
-    // regardless of POST or GET, redirect if user is logged in
-    if ($result->isValid()) {
-        $this->Authentication->logout();
-        return $this->redirect(['controller' => 'Users', 'action' => 'login']);
-    }
-}
-
 }
