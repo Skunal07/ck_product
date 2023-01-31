@@ -105,19 +105,52 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
+        
         $user = $this->Users->get($id, [
-            'contain' => [],
+            'contain' => ['UserProfile'],
         ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+        $fileName2=$user['user_profile']['profile_image'];
 
-                return $this->redirect(['action' => 'index']);
+        // print_r($user);die;
+        // echo $user['user_profile']['profile_image'];
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->getData();
+                // ==========add image ===============
+                $productImage = $this->request->getData("user_profile.profile_image");
+                $fileName = $productImage->getClientFilename();
+                if($fileName == ''){
+                    $fileName = $fileName2;
+                }
+                $data["user_profile"]["profile_image"] = $fileName;
+                $user = $this->Users->patchEntity($user, $data);
+                if ($this->Users->save($user)) {
+                    if ($this->UserProfile->save($user)) {
+                        $hasFileError = $productImage->getError();
+    
+                        if ($hasFileError > 0) {
+                            // no file uploaded
+                            $data["user_profile"]["profile_image"] = "";
+                        } else {
+                            // file uploaded
+                            $fileType = $productImage->getClientMediaType();
+    
+                            if ($fileType == "image/png" || $fileType == "image/jpeg" || $fileType == "image/jpg") {
+                                $imagePath = WWW_ROOT . "img/" . $fileName;
+                                $productImage->moveTo($imagePath);
+                                $data["user_profile"]["profile_image"] = $fileName;
+                            }
+                        }
+                        $this->Flash->success(__('The user has been saved.'));
+                        return $this->redirect(['action' => 'userprofile',$id]);
+                    }
+                }
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
-        $this->set(compact('user'));
+            
+            // echo '<pre>';
+            // print_r($user);
+            // die;
+            $this->set(compact('user'));
     }
 
     /**

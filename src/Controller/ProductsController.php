@@ -25,6 +25,16 @@ class ProductsController extends AppController
 
         $this->set(compact('products'));
     }
+    public function productcategories()
+    {
+        $this->viewBuilder()->setLayout('mydefault');
+        $this->paginate = [
+            'contain' => ['ProductCategories'],
+        ];
+        $products = $this->paginate($this->Products);
+
+        $this->set(compact('products'));
+    }
 
     /**
      * View method

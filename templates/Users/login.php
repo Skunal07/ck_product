@@ -12,6 +12,7 @@
 
     <?= $this->Html->link("Add User", ['action' => 'add']) ?>
 </div> -->
+<div class="contanier">
 <section class="vh-100">
   <div class="container-fluid h-custom">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -73,10 +74,10 @@
     
             <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <?= $this->Html->link("Register", ['action' => 'add','class'=>'link-danger']) ?></p>
           </div>
-
         </form>
       </div>
     </div>
   </div>
 </section>
+</div>
 <?= $this->Html->css('login', ['block' => 'css']); ?>

@@ -97,7 +97,7 @@ body{
     font-weight: 600;
     color: #0062cc;
 }
-#about_user{
+#post_user{
     display: none;
 }
 .polaroid {
@@ -114,4 +114,9 @@ body{
 .noimage{
     width: 30%;
 
+}
+footer{
+    position:absolute;
+    bottom: 0;
+    margin-left: -369px;
 }
