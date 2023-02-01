@@ -76,15 +76,8 @@ class ProductCommentsTable extends Table
             ->requirePresence('comments', 'create')
             ->notEmptyString('comments');
 
-        $validator
-            ->dateTime('created_date')
-            ->requirePresence('created_date', 'create')
-            ->notEmptyDateTime('created_date');
 
-        $validator
-            ->dateTime('modified_date')
-            ->requirePresence('modified_date', 'create')
-            ->notEmptyDateTime('modified_date');
+       
 
         return $validator;
     }

@@ -8,18 +8,23 @@
                </div>
                <div class="col-md-12 col-lg-6 text-start text-lg-end" data-aos="fade-up" data-aos-delay="100">
                    <div id="filters" class="filters">
-                       <?= $this->Form->create(null, ['type' => 'get']) ?>
-                       <?= $this->Form->control('key', ['label' => 'Search', 'value' => $this->request->getQuery('key')]) ?>
-                       <?= $this->Form->submit('') ?>
-                       <?= $this->Form->end() ?>
-
-                       <?= $this->Html->link(__("All"), ['action' => 'productcategories'], ['class' => 'side-nav-link profile-edit-btn']); ?>
+                    <?php 
+                    if($id == 0){
+                        echo $this->Html->link(__("All"), ['action' => 'productcategories'], ['class' => 'side-nav-link active profile-edit-btn']); 
+                    }else{
+                        echo $this->Html->link(__("All"), ['action' => 'productcategories'], ['class' => 'side-nav-link profile-edit-btn']); 
+                    }
+                        ?>
                        <?php
                         $count = 0;
                         foreach ($productc as $productc) : ?>
                            <?php
                             $count++;
-                            echo $this->Html->link(__($productc->category_name), ['action' => 'productcategories', $productc->id], ['class' => 'side-nav-link profile-edit-btn']);
+                            if ($id == $productc->id) {
+                                echo $this->Html->link(__($productc->category_name), ['action' => 'productcategories', $productc->id], ['class' => 'side-nav-link active profile-edit-btn']);
+                            } else {
+                                echo $this->Html->link(__($productc->category_name), ['action' => 'productcategories', $productc->id], ['class' => 'side-nav-link  profile-edit-btn']);
+                            }
                             if ($count == 5) {
                                 break;
                             }
@@ -32,7 +37,7 @@
                <?php foreach ($products as $product) : ?>
 
                    <div class="item web col-sm-6 col-md-4 col-lg-4 mb-4">
-                       <a href="http://localhost:8765/users/userprofile/<?= $product->id ?>" class="item-wrap fancybox">
+                       <a href="http://localhost:8765/products/view/<?= $product->id ?>" class="item-wrap fancybox">
                            <div class="work-info">
                                <span><?= $product->product_title ?></span>
                            </div>

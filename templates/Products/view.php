@@ -1,97 +1,61 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Product $product
- */
-?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('Edit Product'), ['action' => 'edit', $product->id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(__('Delete Product'), ['action' => 'delete', $product->id], ['confirm' => __('Are you sure you want to delete # {0}?', $product->id), 'class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('List Products'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New Product'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="products view content">
-            <h3><?= h($product->id) ?></h3>
-            <table>
-                <tr>
-                    <th><?= __('Product Title') ?></th>
-                    <td><?= h($product->product_title) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Product Category') ?></th>
-                    <td><?= $product->has('product_category') ? $this->Html->link($product->product_category->id, ['controller' => 'ProductCategories', 'action' => 'view', $product->product_category->id]) : '' ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Product Image') ?></th>
-                    <td><?= h($product->product_image) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Status') ?></th>
-                    <td><?= h($product->status) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Id') ?></th>
-                    <td><?= $this->Number->format($product->id) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Created Date') ?></th>
-                    <td><?= h($product->created_date) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Modified Date') ?></th>
-                    <td><?= h($product->modified_date) ?></td>
-                </tr>
-            </table>
-            <div class="text">
-                <strong><?= __('Product Description') ?></strong>
-                <blockquote>
-                    <?= $this->Text->autoParagraph(h($product->product_description)); ?>
-                </blockquote>
-            </div>
-            <div class="text">
-                <strong><?= __('Product Tags') ?></strong>
-                <blockquote>
-                    <?= $this->Text->autoParagraph(h($product->product_tags)); ?>
-                </blockquote>
-            </div>
-            <div class="related">
-                <h4><?= __('Related Product Comments') ?></h4>
-                <?php if (!empty($product->product_comments)) : ?>
-                <div class="table-responsive">
-                    <table>
-                        <tr>
-                            <th><?= __('Id') ?></th>
-                            <th><?= __('Product Id') ?></th>
-                            <th><?= __('User Id') ?></th>
-                            <th><?= __('Comments') ?></th>
-                            <th><?= __('Created Date') ?></th>
-                            <th><?= __('Modified Date') ?></th>
-                            <th class="actions"><?= __('Actions') ?></th>
-                        </tr>
-                        <?php foreach ($product->product_comments as $productComments) : ?>
-                        <tr>
-                            <td><?= h($productComments->id) ?></td>
-                            <td><?= h($productComments->product_id) ?></td>
-                            <td><?= h($productComments->user_id) ?></td>
-                            <td><?= h($productComments->comments) ?></td>
-                            <td><?= h($productComments->created_date) ?></td>
-                            <td><?= h($productComments->modified_date) ?></td>
-                            <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'ProductComments', 'action' => 'view', $productComments->id]) ?>
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'ProductComments', 'action' => 'edit', $productComments->id]) ?>
-                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'ProductComments', 'action' => 'delete', $productComments->id], ['confirm' => __('Are you sure you want to delete # {0}?', $productComments->id)]) ?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </table>
-                </div>
-                <?php endif; ?>
+<section class="section">
+    <div class="container">
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-6" data-aos="fade-up">
+                <h2><?= h($product->product_title) ?></h2>
+                <p><?= h($product->product_description) ?></p>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="site-section pb-0">
+        <div class="container">
+            <div class="row align-items-stretch">
+                <div class="col-md-8" data-aos="fade-up">
+                    <!-- <img src="/img/img_1_big.jpg" alt="Image" class="img-fluid"> -->
+                    <?= $this->Html->image(h($product->product_image), array('class' => 'img-fluid')) ?>
+                </div>
+                <div class="col-md-3 ml-auto" data-aos="fade-up" data-aos-delay="100">
+                    <div class="sticky-content">
+                        <h3 class="h3"><?= h($product->product_category->category_name) ?></h3>
+                        <p class="mb-4"><span class="text-muted">Design</span></p>
+
+                        <div class="mb-5">
+                            <p><?= h($product->product_description) ?></p>
+                        </div>
+                        <?= $this->Html->link(__('Visit Website'), ['action' => 'productcategories'], ['class' => 'readmore']) ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+<!-- ======= Testimonials Section ======= -->
+<section class="section pt-0">
+    <?= $this->Form->create($comment) ?>
+    <div class="d-flex flex-row add-comment-section mt-4 mb-4">
+
+        <input type="text" name="comments" id="comments" class="form-control mr-3" placeholder="Add comment">
+        <button class="btn btn-primary" type="submit">Comment</button>
+    </div>
+    <?php
+    // echo $this->Form->control('comments', array('label' => false, 'type' => 'text'));
+    ?>
+    <!-- <button type="submit" class="fa-solid fa-arrow-right"></button> -->
+    <?= $this->Form->end() ?>
+
+        <div class="comments">
+            <?php foreach ($comments as $comment) : ?>
+                <div class="d-flex flex-row mb-2">
+                    <?= $this->Html->image($comment->user->user_profile->profile_image, array('class' => 'd-block ui-w-40 rounded-circle','width'=>'60px')); ?>
+                    <div class="d-flex flex-column ml-2">
+                        <span class="name"><?= h($comment->user->email) ?></span>
+                        <h5 class="text-bold"><?= h($comment->comments) ?></h5>
+                    </div>
+    <?= $this->Form->postLink(__('Delete'), ['controller' => 'ProductComments', 'action' => 'delete', $comment->id,$product->id], ['confirm' => __('Are you sure you want to delete?'),'style'=>"margin-left: auto;"]) ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+</section><!-- End Testimonials Section -->
+<?= $this->Html->css('productc', ['block' => 'css'])    ?>
+<?= $this->Html->css('viewp', ['block' => 'css'])    ?>

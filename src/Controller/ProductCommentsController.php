@@ -97,7 +97,7 @@ class ProductCommentsController extends AppController
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete($id = null,$product_id)
     {
         $this->request->allowMethod(['post', 'delete']);
         $productComment = $this->ProductComments->get($id);
@@ -107,6 +107,6 @@ class ProductCommentsController extends AppController
             $this->Flash->error(__('The product comment could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['controller' => 'products', 'action' => 'view',$product_id]);
     }
 }

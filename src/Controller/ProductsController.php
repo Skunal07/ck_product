@@ -20,6 +20,9 @@ class ProductsController extends AppController
     {
         $this->loadComponent('Authentication.Authentication');
         $this->Model = $this->loadModel('ProductCategories');
+        $this->Model = $this->loadModel('ProductComments');
+        $this->Model = $this->loadModel('UserProfile');
+        $this->Model = $this->loadModel('Users');
         $this->loadComponent('Flash');
         $this->viewBuilder()->setLayout('mydefault');
         // $this->loadComponent('Rahul');        
@@ -34,8 +37,14 @@ class ProductsController extends AppController
 
         $this->set(compact('products'));
     }
-    public function productcategories()
+    public function productcategories($id=null)
     {
+        $user = $this->Authentication->getIdentity();
+        $uid = $user->id;
+        $status = $this->UserProfile->get($uid, [
+            'contain' => ['Users'],
+        ]);
+
         $this->paginate = [
             'contain' => ['ProductCategories'],
         ];
@@ -50,11 +59,14 @@ class ProductsController extends AppController
             $query=$this->Products;
         }
         $products = $this->paginate($query);
+        if($id != null){
+            $products = $this->Products->find()->where(['product_category_id'=>$id])->all();
+        }
         $productc = $this->paginate($this->ProductCategories);
         // echo '<pre>';
         // print_r($productc);die;
 
-        $this->set(compact('products','productc'));
+        $this->set(compact('products','productc','status','id'));
     }
 
     /**
@@ -66,11 +78,38 @@ class ProductsController extends AppController
      */
     public function view($id = null)
     {
+
+        $user = $this->Authentication->getIdentity();
+        $uid = $user->id;
         $product = $this->Products->get($id, [
             'contain' => ['ProductCategories', 'ProductComments'],
         ]);
+        $user = $this->UserProfile->get($uid, [
+            'contain' => [],
+        ]);
+        $status = $this->UserProfile->get($uid, [
+            'contain' => ['Users'],
+        ]);
+        $comments = $this->ProductComments->find('all',['contain' => ['Users','Users.UserProfile']])->where(['product_id'=>$id])->all();
 
-        $this->set(compact('product'));
+        // echo '<pre>';
+        // print_r($comments);die;
+
+        // $comments = $this->Product->find('all',['contain' => ['category']])->where(['product_category_id'=>$id])->all();
+        $comment = $this->ProductComments->newEmptyEntity();           
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->getData();
+            $data['product_id'] = $id;
+            $data['user_id'] = $uid;
+            $comment = $this->ProductComments->patchEntity($comment, $data);
+            if ($this->ProductComments->save($comment)) {
+                $this->Flash->success(__('The comment has been saved.'));
+                return $this->redirect(['controller'=>'products','action' => 'view', $id]);
+            }
+            $this->Flash->error(__('The comment could not be saved. Please, try again.'));
+        }
+
+        $this->set(compact('product','comments','comment','user','status'));
     }
 
     /**

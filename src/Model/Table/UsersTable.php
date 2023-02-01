@@ -7,6 +7,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\ORM\TableRegistry;
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 
 /**
  * Users Model
@@ -61,17 +63,102 @@ class UsersTable extends Table
      */
     public function validationDefault(Validator $validator): Validator
     {
-        $validator
+        // $validator
+        //     ->email('email')
+        //     ->requirePresence('email', 'create')
+        //     ->notEmptyString('email')
+        //     ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
+        // $validator
+        //     ->scalar('password')
+        //     ->maxLength('password', 200)
+        //     ->requirePresence('password', 'create')
+        //     ->notEmptyString('password');
+
+            $validator
             ->email('email')
             ->requirePresence('email', 'create')
-            ->notEmptyString('email')
-            ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->notEmptyString('email', "please enter your Email")
+            ->add('email', 'unique', [
+                'rule' => 'validateUnique', 'provider' => 'table',
+                'message' => 'Email already exist please enter another Email',
+            ]);
+
 
         $validator
             ->scalar('password')
-            ->maxLength('password', 200)
+            ->maxLength('password', 225)
             ->requirePresence('password', 'create')
-            ->notEmptyString('password');
+            ->add('password', [
+                'notBlank' => [
+                    'rule'    => ['notBlank'],
+                    'message' => 'Please enter your password',
+                ],
+                'upperCase' => [
+                    'rule' => function ($value) {
+                        $count = mb_strlen(preg_replace('![^A-Z]+!', '', $value));
+                        if ($count > 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    'message' => 'Please enter at least one uppercase',
+                ],
+                'lowerCase' => [
+                    'rule' => function ($value) {
+                        $count = mb_strlen(preg_replace('![^a-z]+!', '', $value));
+                        if ($count > 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    'message' => 'Please enter at least one lowercase',
+                ],
+                'numeric' => [
+                    'rule' => function ($value) {
+                        $count = mb_strlen(preg_replace('![^0-9]+!', '', $value));
+                        if ($count > 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    'message' => 'Please enter at least one numeric',
+                ],
+                'special' => [
+                    'rule' => function ($value) {
+                        $count = mb_strlen(preg_replace('![^@#*]+!', '', $value));
+                        if ($count > 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    'message' => 'Please enter at least one special character',
+                ],
+                'minLength' => [
+                    'rule' => ['minLength', 8],
+                    'message' => 'Password need to be 8 characters long',
+                ],
+            ]);
+        $validator
+            ->scalar('confirm_password')
+            ->maxLength('confirm_password', 225)
+            ->requirePresence('confirm_password', 'create')
+            ->add('confirm_password', [
+                'notBlank' => [
+                    'rule'    => ['notBlank'],
+                    'message' => 'Please enter your confirm-password',
+                    'last' => true,
+                ],
+                'match' => [
+                    'rule' => array('compareWith', 'password'),
+                    'last' => true,
+                    'message' => 'Password should not match with the previous password'
+                ]
+            ]);
 
    
         return $validator;
@@ -89,5 +176,56 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
 
         return $rules;
+    }
+    public function checktokenexist($token)
+    {
+        $result = $this->find('all')->where(['token' => $token])->first();
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkEmailExist($email)
+    {
+        $result = $this->find('all')->where(['email' => $email])->first();
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function resetPassword($token, $password)
+    {
+        $users = TableRegistry::get("Users");
+        $query = $users->query();
+        $pass=(new DefaultPasswordHasher())->hash($password);
+        $result = $query->update()
+            ->set(['password' => $pass, 'token' => ''])
+            ->where(['token' => $token])
+            ->execute();
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function insertToken($email, $token)
+    {
+        $users = TableRegistry::get("Users");
+        $query = $users->query();
+        $result = $query->update()
+            ->set(['token' => $token])
+            ->where(['email' => $email])
+            ->execute();
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
