@@ -33,7 +33,8 @@
                         </div>
                         <input id="user-profile-first-name" type="text" name="user_profile[first_name]" placeholder="First Name" class="form-control bg-white border-left-0 border-md">
                     </div>
-
+                    <span id="fname-error" class="text-danger"></span>
+                    
                     <!-- Last Name -->
                     <div class="input-group col-lg-6 mb-4">
                         <div class="input-group-prepend">
@@ -43,6 +44,7 @@
                         </div>
                         <input id="user-profile-last-name" type="text" name="user_profile[last_name]" placeholder="Last Name" class="form-control bg-white border-left-0 border-md">
                     </div>
+                    <span id="lname-error" class="text-danger"></span>
 
                     <!-- Email Address -->
                     <div class="input-group col-lg-12 mb-4">
@@ -53,6 +55,7 @@
                         </div>
                         <input id="email" type="email" name="email" placeholder="Email Address" class="form-control bg-white border-left-0 border-md">
                     </div>
+                    <span id="email-error" class="text-danger"></span>
 
                      <!-- Password -->
                      <div class="input-group col-lg-6 mb-4">
@@ -63,6 +66,7 @@
                         </div>
                         <input id="password" type="password" name="password" placeholder="Password" class="form-control bg-white border-left-0 border-md">
                     </div>
+                    <span id="password-error" class="text-danger"></span>
 
                     <!-- Password Confirmation -->
                     <div class="input-group col-lg-6 mb-4">
@@ -71,9 +75,11 @@
                                 <i class="fa fa-lock text-muted"></i>
                             </span>
                         </div>
-                        <input id="passwordConfirmation" type="text" name="passwordConfirmation" placeholder="Confirm Password" class="form-control bg-white border-left-0 border-md">
+                        <input id="confirm-password" type="password" name="confirm_password" placeholder="Confirm Password" class="form-control bg-white border-left-0 border-md">
+                      
                     </div>
-
+                    <span id="confirm-password-error" class="text-danger"></span>
+                    
                     <!-- Phone Number -->
                     <div class="input-group col-lg-12 mb-4">
                         <div class="input-group-prepend">
@@ -83,7 +89,8 @@
                         </div>
                         <input id="user-profile-contact" type="text" name="user_profile[contact]" placeholder="Phone Number" class="form-control bg-white border-md border-left-0 pl-3" maxlength="10">
                     </div>
-
+                    <span id="phone-error" class="text-danger"></span>
+                    
 
                       <!-- address -->
                       <div class="input-group col-lg-12 mb-4">
@@ -94,6 +101,7 @@
                         </div>
                         <input id="user-profile-address" type="text" name="user_profile[address]" placeholder="Address" class="form-control bg-white border-left-0 border-md">
                     </div>
+                    <span id="address-error" class="text-danger"></span>
 
 
                    

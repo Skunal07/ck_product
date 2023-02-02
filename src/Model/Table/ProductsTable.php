@@ -87,19 +87,7 @@ class ProductsTable extends Table
             ->requirePresence('product_tags', 'create')
             ->notEmptyString('product_tags');
 
-        $validator
-            ->scalar('status')
-            ->requirePresence('status', 'create')
-            ->notEmptyString('status');
-
-        $validator
-            ->dateTime('created_date')
-            ->notEmptyDateTime('created_date');
-
-        $validator
-            ->dateTime('modified_date')
-            ->requirePresence('modified_date', 'create')
-            ->notEmptyDateTime('modified_date');
+        
 
         return $validator;
     }

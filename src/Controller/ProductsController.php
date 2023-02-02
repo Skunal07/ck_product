@@ -28,15 +28,81 @@ class ProductsController extends AppController
         // $this->loadComponent('Rahul');        
     }
 
+    public function indexproductc($id=null)
+    {
+        $this->viewBuilder()->setLayout('admin');
+        $user = $this->Authentication->getIdentity();
+        $uid = $user->id;
+        $status = $this->UserProfile->get($uid, [
+            'contain' => ['Users'],
+        ]);
+        $productcat = $this->ProductCategories->newEmptyEntity();           
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $productcat = $this->ProductCategories->patchEntity($productcat, $this->request->getData());
+            if ($this->ProductCategories->save($productcat)) {
+                $this->Flash->success(__('The comment has been saved.'));
+                return $this->redirect(['controller'=>'products','action' => 'indexproductc',]);
+            }
+            $this->Flash->error(__('The comment could not be saved. Please, try again.'));
+        }
+        $productCategories = $this->paginate($this->ProductCategories);
+
+        $this->set(compact('productCategories','status','productcat'));
+    }
+
+
     public function index()
     {
+        $this->viewBuilder()->setLayout('admin');
+        $user = $this->Authentication->getIdentity();
+        $uid = $user->id;
+        $status = $this->UserProfile->get($uid, [
+            'contain' => ['Users'],
+        ]);
         $this->paginate = [
             'contain' => ['ProductCategories'],
         ];
         $products = $this->paginate($this->Products);
 
-        $this->set(compact('products'));
+        $this->set(compact('products','status'));
     }
+
+ // ================product category-status===========
+ public function productcstatus($id=null,$status = null)
+ {
+     $productcstatus = $this->ProductCategories->get($id);
+     if($status == 1){
+         $productcstatus->status = 0;
+     }else{
+         $productcstatus->status = 1;
+     }
+     if($this->ProductCategories->save($productcstatus)){
+         $this->Flash->success(__('The user status has been changed.'));
+     }
+       return  $this->redirect(['controller'=>'products','action'=>'indexproductc']);
+     $this->set(compact('userstatus'));
+ }
+
+
+ // ================product -status===========
+ public function productstatus($id=null,$status = null)
+ {
+     $productstatus = $this->Products->get($id);
+     if($status == 1){
+         $productstatus->status = 0;
+     }else{
+         $productstatus->status = 1;
+     }
+     if($this->Products->save($productstatus)){
+         $this->Flash->success(__('The user status has been changed.'));
+     }
+       return  $this->redirect(['controller'=>'products','action'=>'index']);
+     $this->set(compact('userstatus'));
+ }
+
+
+
+    // ============product and category ===============
     public function productcategories($id=null)
     {
         $user = $this->Authentication->getIdentity();
@@ -68,7 +134,25 @@ class ProductsController extends AppController
 
         $this->set(compact('products','productc','status','id'));
     }
+//  ===========================delete category =======================
 
+// public function deletecat($id = null)
+// {
+//     $this->request->allowMethod(['post', 'delete']);
+//     $productCategory = $this->ProductCategories->get($id);
+//     $products = $this->Products->find()->where(['product_category_id'=>$id])->all();
+    
+//     // $this->ProductCategories->Products->deleteAll(array('product_category_id' => $id));
+//     dd($products);die;
+//     $this->ProductCategories->Products->ProductComments->deleteAll(array('product_id' => $id));
+//     if ($this->ProductCategories->delete($productCategory)) {
+//         $this->Flash->success(__('The product category has been deleted.'));
+//     } else {
+//         $this->Flash->error(__('The product category could not be deleted. Please, try again.'));
+//     }
+
+//     return $this->redirect(['action' => 'index']);
+// }
     /**
      * View method
      *
@@ -119,18 +203,47 @@ class ProductsController extends AppController
      */
     public function add()
     {
+        $user = $this->Authentication->getIdentity();
+            $uid = $user->id;
+            $status = $this->UserProfile->get($uid, [
+                'contain' => ['Users'],
+            ]);
+           
+            $productcategory = $this->paginate($this->ProductCategories);
+            // echo '<pre>';
+            // print_r($productcategory);die;
         $product = $this->Products->newEmptyEntity();
         if ($this->request->is('post')) {
-            $product = $this->Products->patchEntity($product, $this->request->getData());
+            // ==========add image ===============
+            $data = $this->request->getData();
+            $productImage = $this->request->getData("product_image");
+            $fileName = $productImage->getClientFilename();
+            $data["product_image"] = $fileName;
+            $product = $this->Products->patchEntity($product, $data);
+            
             if ($this->Products->save($product)) {
-                $this->Flash->success(__('The product has been saved.'));
+               
+                    $hasFileError = $productImage->getError();
 
-                return $this->redirect(['action' => 'index']);
+                    if ($hasFileError > 0) {
+                        // no file uploaded
+                        $data["product_image"] = "";
+                    } else {
+                        // file uploaded
+                        $fileType = $productImage->getClientMediaType();
+
+                        if ($fileType == "image/png" || $fileType == "image/jpeg" || $fileType == "image/jpg") {
+                            $imagePath = WWW_ROOT . "img/" . $fileName;
+                            $productImage->moveTo($imagePath);
+                            $data["product_image"] = $fileName;
+                        }
+                    }
+                    $this->Flash->success(__('The user has been saved.'));
+                    return $this->redirect(['action' => 'productcategories']);
             }
-            $this->Flash->error(__('The product could not be saved. Please, try again.'));
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $productCategories = $this->Products->ProductCategories->find('list', ['limit' => 200])->all();
-        $this->set(compact('product', 'productCategories'));
+        $this->set(compact('productcategory','product','status'));
     }
 
     /**
@@ -142,12 +255,41 @@ class ProductsController extends AppController
      */
     public function edit($id = null)
     {
+        $user = $this->Authentication->getIdentity();
+        $uid = $user->id;
+        $status = $this->UserProfile->get($uid, [
+            'contain' => ['Users'],
+        ]);
         $product = $this->Products->get($id, [
             'contain' => [],
         ]);
+        $productcategory = $this->paginate($this->ProductCategories);
+        $fileName2 = $product['product_image'];
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $product = $this->Products->patchEntity($product, $this->request->getData());
+            $data = $this->request->getData();
+            $productImage = $this->request->getData("product_image");
+            $fileName = $productImage->getClientFilename();
+            if ($fileName == '') {
+                $fileName = $fileName2;
+            }
+            $data["product_image"] = $fileName;
+            $product = $this->Products->patchEntity($product,$data);
             if ($this->Products->save($product)) {
+                $hasFileError = $productImage->getError();
+
+                if ($hasFileError > 0) {
+                    // no file uploaded
+                    $data["product_image"] = "";
+                } else {
+                    // file uploaded
+                    $fileType = $productImage->getClientMediaType();
+
+                    if ($fileType == "image/png" || $fileType == "image/jpeg" || $fileType == "image/jpg") {
+                        $imagePath = WWW_ROOT . "img/" . $fileName;
+                        $productImage->moveTo($imagePath);
+                        $data["product_image"] = $fileName;
+                    }
+                }
                 $this->Flash->success(__('The product has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -155,7 +297,7 @@ class ProductsController extends AppController
             $this->Flash->error(__('The product could not be saved. Please, try again.'));
         }
         $productCategories = $this->Products->ProductCategories->find('list', ['limit' => 200])->all();
-        $this->set(compact('product', 'productCategories'));
+        $this->set(compact('product', 'productCategories','productcategory','status'));
     }
 
     /**
@@ -169,6 +311,7 @@ class ProductsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $product = $this->Products->get($id);
+        $this->Products->ProductComments->deleteAll(array('Product_id' => $id));
         if ($this->Products->delete($product)) {
             $this->Flash->success(__('The product has been deleted.'));
         } else {

@@ -49,7 +49,7 @@
                 <div class="d-flex flex-row mb-2">
                     <?= $this->Html->image($comment->user->user_profile->profile_image, array('class' => 'd-block ui-w-40 rounded-circle','width'=>'60px')); ?>
                     <div class="d-flex flex-column ml-2">
-                        <span class="name"><?= h($comment->user->email) ?></span>
+                        <span class="name"><?= h($comment->user->user_profile->first_name) ?></span>
                         <h5 class="text-bold"><?= h($comment->comments) ?></h5>
                     </div>
     <?= $this->Form->postLink(__('Delete'), ['controller' => 'ProductComments', 'action' => 'delete', $comment->id,$product->id], ['confirm' => __('Are you sure you want to delete?'),'style'=>"margin-left: auto;"]) ?>

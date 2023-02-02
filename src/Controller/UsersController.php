@@ -34,15 +34,21 @@ class UsersController extends AppController
 
     public function index()
     {
+        $this->viewBuilder()->setLayout('admin');
         $user = $this->Authentication->getIdentity();
         $uid = $user->id;
         $status = $this->UserProfile->get($uid, [
             'contain' => ['Users'],
         ]);
+        $this->paginate=[
+            'contain' => ['UserProfile'],
+        ];
         $users = $this->paginate($this->Users);
-
+        // dd($users);die;
         $this->set(compact('users','status'));
     }
+
+    
     public function services()
     {
         $user = $this->Authentication->getIdentity();
@@ -55,6 +61,22 @@ class UsersController extends AppController
         $this->set(compact('users','status'));
     }
 
+    // ================user-status===========
+    public function userstatus($id=null,$status = null)
+    {
+        $userstatus = $this->Users->get($id);
+        if($status == 1){
+            $userstatus->status = 2;
+        }else{
+            $userstatus->status = 1;
+        }
+        if($this->Users->save($userstatus)){
+            $this->Flash->success(__('The user status has been changed.'));
+        }
+          return  $this->redirect(['action'=>'index']);
+        $this->set(compact('userstatus'));
+    }
+
     /**
      * View method
      *
@@ -62,15 +84,7 @@ class UsersController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
-        $user = $this->Users->get($id, [
-            'contain' => ['ProductComments', 'UserProfile'],
-        ]);
-
-        $this->set(compact('user'));
-    }
-
+   
     /**
      * Add method
      *
@@ -90,8 +104,12 @@ class UsersController extends AppController
             $productImage = $this->request->getData("user_profile.profile_image");
             $fileName = $productImage->getClientFilename();
             $data["user_profile"]["profile_image"] = $fileName;
-            $user = $this->Users->patchEntity($user, $data);
-            
+            $email=$data["email"];
+            $result = $this->Users->find('all')->where(['email' => $email])->first();
+            if($result){
+                $this->Flash->error(__('Email already in use.'));
+            }else{
+                $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 if ($this->UserProfile->save($user)) {
                     $hasFileError = $productImage->getError();
@@ -114,6 +132,7 @@ class UsersController extends AppController
                 }
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        }
         }
         $this->set(compact('user'));
     }
@@ -201,7 +220,11 @@ class UsersController extends AppController
         } else {
             $this->Flash->error(__('The post could not be deleted. Please, try again.'));
         }
+        if($uid == $id){
             return $this->redirect(['controller' => 'Users', 'action' => 'logout']);
+        }else{
+            return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+        }
     }
 
     // ===================before login =====================
@@ -222,6 +245,17 @@ class UsersController extends AppController
         $result = $this->Authentication->getResult();
         // regardless of POST or GET, redirect if user is logged in
         if ($result->isValid()) {
+        $user = $this->Authentication->getIdentity();
+
+            if($user->status == 2){
+                $this->Flash->error(__('Invalid email or password'));
+                $redirect = $this->request->getQuery('redirect', [
+                    'controller' => 'Users',
+                    'action' => 'logout',
+                ]);
+                return $this->redirect($redirect);
+            }else if($user->status == 1){
+              
             // redirect to /articles after login success
             $this->Flash->success(__('Login Successfully'));
 
@@ -232,6 +266,7 @@ class UsersController extends AppController
 
             return $this->redirect($redirect);
         }
+    }
         // display error if user submitted and authentication failed
         if ($this->request->is('post') && !$result->isValid()) {
             $this->Flash->error(__('Invalid email or password'));

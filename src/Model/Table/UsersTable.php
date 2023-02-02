@@ -88,77 +88,77 @@ class UsersTable extends Table
         $validator
             ->scalar('password')
             ->maxLength('password', 225)
-            ->requirePresence('password', 'create')
-            ->add('password', [
-                'notBlank' => [
-                    'rule'    => ['notBlank'],
-                    'message' => 'Please enter your password',
-                ],
-                'upperCase' => [
-                    'rule' => function ($value) {
-                        $count = mb_strlen(preg_replace('![^A-Z]+!', '', $value));
-                        if ($count > 0) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    'message' => 'Please enter at least one uppercase',
-                ],
-                'lowerCase' => [
-                    'rule' => function ($value) {
-                        $count = mb_strlen(preg_replace('![^a-z]+!', '', $value));
-                        if ($count > 0) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    'message' => 'Please enter at least one lowercase',
-                ],
-                'numeric' => [
-                    'rule' => function ($value) {
-                        $count = mb_strlen(preg_replace('![^0-9]+!', '', $value));
-                        if ($count > 0) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    'message' => 'Please enter at least one numeric',
-                ],
-                'special' => [
-                    'rule' => function ($value) {
-                        $count = mb_strlen(preg_replace('![^@#*]+!', '', $value));
-                        if ($count > 0) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    'message' => 'Please enter at least one special character',
-                ],
-                'minLength' => [
-                    'rule' => ['minLength', 8],
-                    'message' => 'Password need to be 8 characters long',
-                ],
-            ]);
+            ->requirePresence('password', 'create');
+            // ->add('password', [
+            //     'notBlank' => [
+            //         'rule'    => ['notBlank'],
+            //         'message' => 'Please enter your password',
+            //     ],
+            //     'upperCase' => [
+            //         'rule' => function ($value) {
+            //             $count = mb_strlen(preg_replace('![^A-Z]+!', '', $value));
+            //             if ($count > 0) {
+            //                 return true;
+            //             } else {
+            //                 return false;
+            //             }
+            //         },
+            //         'message' => 'Please enter at least one uppercase',
+            //     ],
+            //     'lowerCase' => [
+            //         'rule' => function ($value) {
+            //             $count = mb_strlen(preg_replace('![^a-z]+!', '', $value));
+            //             if ($count > 0) {
+            //                 return true;
+            //             } else {
+            //                 return false;
+            //             }
+            //         },
+            //         'message' => 'Please enter at least one lowercase',
+            //     ],
+            //     'numeric' => [
+            //         'rule' => function ($value) {
+            //             $count = mb_strlen(preg_replace('![^0-9]+!', '', $value));
+            //             if ($count > 0) {
+            //                 return true;
+            //             } else {
+            //                 return false;
+            //             }
+            //         },
+            //         'message' => 'Please enter at least one numeric',
+            //     ],
+            //     'special' => [
+            //         'rule' => function ($value) {
+            //             $count = mb_strlen(preg_replace('![^@#*]+!', '', $value));
+            //             if ($count > 0) {
+            //                 return true;
+            //             } else {
+            //                 return false;
+            //             }
+            //         },
+            //         'message' => 'Please enter at least one special character',
+            //     ],
+            //     'minLength' => [
+            //         'rule' => ['minLength', 8],
+            //         'message' => 'Password need to be 8 characters long',
+            //     ],
+            // ]);
         $validator
             ->scalar('confirm_password')
             ->maxLength('confirm_password', 225)
-            ->requirePresence('confirm_password', 'create')
-            ->add('confirm_password', [
-                'notBlank' => [
-                    'rule'    => ['notBlank'],
-                    'message' => 'Please enter your confirm-password',
-                    'last' => true,
-                ],
-                'match' => [
-                    'rule' => array('compareWith', 'password'),
-                    'last' => true,
-                    'message' => 'Password should not match with the previous password'
-                ]
-            ]);
+            ->requirePresence('confirm_password', 'create');
+            // ->add('confirm_password', [
+            //     'notBlank' => [
+            //         'rule'    => ['notBlank'],
+            //         'message' => 'Please enter your confirm-password',
+            //         'last' => true,
+            //     ],
+            //     'match' => [
+            //         'rule' => array('compareWith', 'password'),
+            //         'last' => true,
+            //         'message' => 'Password should not match with the previous password'
+            //     ]
+            // ]);
 
    
         return $validator;

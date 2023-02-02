@@ -16,6 +16,17 @@ class ProductCategoriesController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
+    public function initialize(): void
+    {
+        $this->loadComponent('Authentication.Authentication');
+        $this->Model = $this->loadModel('ProductCategories');
+        $this->Model = $this->loadModel('ProductComments');
+        $this->Model = $this->loadModel('UserProfile');
+        $this->Model = $this->loadModel('Users');
+        $this->loadComponent('Flash');
+        $this->viewBuilder()->setLayout('mydefault');
+        // $this->loadComponent('Rahul');        
+    }
     public function index()
     {
         $productCategories = $this->paginate($this->ProductCategories);
@@ -68,6 +79,12 @@ class ProductCategoriesController extends AppController
      */
     public function edit($id = null)
     {
+        $this->viewBuilder()->setLayout('mydefault');
+        $user = $this->Authentication->getIdentity();
+            $uid = $user->id;
+            $status = $this->UserProfile->get($uid, [
+                'contain' => ['Users'],
+            ]);
         $productCategory = $this->ProductCategories->get($id, [
             'contain' => [],
         ]);
@@ -76,11 +93,11 @@ class ProductCategoriesController extends AppController
             if ($this->ProductCategories->save($productCategory)) {
                 $this->Flash->success(__('The product category has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['controller'=>'Products','action' => 'indexproductc']);
             }
             $this->Flash->error(__('The product category could not be saved. Please, try again.'));
         }
-        $this->set(compact('productCategory'));
+        $this->set(compact('productCategory','status'));
     }
 
     /**

@@ -1,5 +1,6 @@
 $(document).ready(function () {
     $('form').submit(function (e) {
+        // alert("jisdfvjkdsnjkn")
 
         //         // Error removing if input is correct/valid
         var removeErr = document.getElementsByClassName('error-message');
@@ -9,31 +10,37 @@ $(document).ready(function () {
 
         errorcheck = 0;
         var letters = /^[A-Za-z\s]+$/;
-        var name = $("#name").val();
-        name = fname.trim();
-        if (name == "") {
-            $('#name-error').html("Please enter your first name");
+        var first_name = $("#user-profile-first-name").val();
+        first_name = first_name.trim();
+        if (first_name == "") {
+            $('#fname-error').html("Please enter your first name");
             errorcheck = 1;
-        } else if (!name.match(letters)) {
-            $('#name-error').html("Please enter characters only");
+        } else if (!first_name.match(letters)) {
+            $('#fname-error').html("Please enter characters only");
             errorcheck = 1;
-        } else if (name.length < 3) {
-            $('#name-error').html("Please enter at least 3 characters");
+        } else if (first_name.length < 3) {
+            $('#fname-error').html("Please enter at least 3 characters");
+            errorcheck = 1;
+        }
+        var last_name = $("#user-profile-first-name").val();
+        last_name = last_name.trim();
+        if (last_name == "") {
+            $('#lname-error').html("Please enter your first name");
+            errorcheck = 1;
+        } else if (!last_name.match(letters)) {
+            $('#lname-error').html("Please enter characters only");
+            errorcheck = 1;
+        } else if (last_name.length < 3) {
+            $('#lname-error').html("Please enter at least 3 characters");
             errorcheck = 1;
         }
        var  letters = /^[a-z0-9_.]+$/
-        var username = $("#username").val();
-        username = username.trim();
-        if (username == "") {
-            $('#username-error').html("Please enter your last name");
+        var address = $("#user-profile-address").val();
+        address = address.trim();
+        if (address == "") {
+            $('#address-error').html("Please enter your address");
             errorcheck = 1;
-        } else if (!username.match(letters)) {
-            $('#username-error').html("Please enter characters only");
-            errorcheck = 1;
-        } else if (username.length < 3) {
-            $('#username-error').html("Please enter at least 3 characters");
-            errorcheck = 1;
-        }
+        } 
         // email validation
         var validRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         var email = $("#email").val();
@@ -47,7 +54,7 @@ $(document).ready(function () {
         }
 
         // phone number validation
-        var phone = $("#phone").val();
+        var phone = $("#user-profile-contact").val();
         phone = phone.trim();
         if (phone == "") {
             $('#phone-error').html("Please enter your phone number");
@@ -94,55 +101,12 @@ $(document).ready(function () {
                 errorcheck = 1;
             }
         }
-
-        // gender validation
-        var gender = "";
-        var ele = document.getElementsByName('gender');
-        for (i = 0; i < ele.length; i++) {
-            if (ele[i].checked) {
-                gender = ele[i].value;
-            }
-        }
-        gender = gender.trim();
-        if (gender == "") {
-            $('#gender-error').html("Please select your gender");
-            errorcheck = 1;
-        }
-
-        if (errorcheck == 0) {
-
-        } else {
+        
+        if (errorcheck == 1) {
             return false;
         }
 
     });
 
-    // error removing on keyup
-    $('input[name=name]').keyup(function () {
-        $('#first-name-error').html("");
-    });
-    $('input[name=username]').keyup(function () {
-        $('#username-error').html("");
-    });
-    $('input[name=last_name]').keyup(function () {
-        $('#last-name-error').html("");
-    });
-    $('input[name=email]').keyup(function () {
-        $('#email-error').html("");
-    });
-    $('input[name=phone]').keyup(function () {
-        $('#phone-number-error').html("");
-    });
-    $('input[name=password]').keyup(function () {
-        $('#password-error').html("");
-    });
-    $('input[name=confirm_password]').keyup(function () {
-        $('#confirm-password-error').html("");
-    });
-    $('input[name=gender]').click(function () {
-        $('#gender-error').html("");
-    });
-
-    
 
 });
