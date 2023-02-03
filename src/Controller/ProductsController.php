@@ -33,6 +33,9 @@ class ProductsController extends AppController
         $this->viewBuilder()->setLayout('admin');
         $user = $this->Authentication->getIdentity();
         $uid = $user->id;
+        if($user->user_type == 0){
+            return $this->redirect(['controller'=>'products','action' => 'productcategories',]);
+        }
         $status = $this->UserProfile->get($uid, [
             'contain' => ['Users'],
         ]);
@@ -71,6 +74,9 @@ class ProductsController extends AppController
         $this->viewBuilder()->setLayout('admin');
         $user = $this->Authentication->getIdentity();
         $uid = $user->id;
+        if($user->user_type == 0){
+            return $this->redirect(['controller'=>'products','action' => 'productcategories',]);
+        }
         $status = $this->UserProfile->get($uid, [
             'contain' => ['Users'],
         ]);
@@ -137,7 +143,7 @@ class ProductsController extends AppController
         if($id != null){
             $products = $this->Products->find('all')->contain('ProductCategories')->where(['product_category_id'=>$id,'Products.status'=>'0'])->order(['Products.id' => 'DESC']);
         }else if($key){
-            $products =$this->Products->find('all')->contain('ProductCategories')->where(['Or'=>['product_title like'=>'%'.$key.'%','product_tags like'=>'%'.$key.'%']]);
+            $products =$this->Products->find('all')->contain('ProductCategories')->where(['Products.status'=>0,'Or'=>['product_title like'=>'%'.$key.'%','product_tags like'=>'%'.$key.'%']]);
         }else{
             $products = $this->Products->find('all')->contain('ProductCategories')->where(['Products.status'=>'0'])->order(['Products.id' => 'DESC']);         
         }

@@ -28,7 +28,10 @@
             </div>
         </div>
         <div class="col-md-2">
-             <?= $this->Html->link(__('Edit Profile'), ['action' => 'edit', $user->id], ['class' => 'nav-link profile-edit-btn']); ?>
+             <?= $this->Html->link(__('Edit Profile'), ['action' => 'edit', $user->id], ['class' => 'nav-link profile-edit-btn mb-4']); ?>
+             <?php if($status->user->user_type == 1){ ?>
+            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'nav-link profile-edit-btn']) ?>
+            <?php }?>
         </div>
     </div>
     <div class="row">

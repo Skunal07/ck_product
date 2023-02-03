@@ -73,7 +73,7 @@
     <?= $this->Form->submit(__('Login'),array('class'=>"btn btn-primary btn-lg")); ?>
     <?= $this->Form->end() ?>
     
-            <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <?= $this->Html->link("Register", ['action' => 'add','class'=>'link-danger']) ?></p>
+            <p class=" fw-bold mt-2 pt-1 mb-0">Don't have an account? <?= $this->Html->link("Register", ['action' => 'add','class'=>'link-danger']) ?></p>
           </div>
         </form>
       </div>

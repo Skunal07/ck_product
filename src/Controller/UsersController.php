@@ -37,6 +37,9 @@ class UsersController extends AppController
         $this->viewBuilder()->setLayout('admin');
         $user = $this->Authentication->getIdentity();
         $uid = $user->id;
+        if($user->user_type == 0){
+            return $this->redirect(['controller'=>'products','action' => 'productcategories',]);
+        }
         $status = $this->UserProfile->get($uid, [
             'contain' => ['Users'],
         ]);
@@ -246,8 +249,7 @@ class UsersController extends AppController
         $result = $this->Authentication->getResult();
         // regardless of POST or GET, redirect if user is logged in
         if ($result->isValid()) {
-        $user = $this->Authentication->getIdentity();
-
+             $user = $this->Authentication->getIdentity();
             if($user->status == 2){
                 $this->Flash->error(__('Invalid email or password'));
                 $redirect = $this->request->getQuery('redirect', [
