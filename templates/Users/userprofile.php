@@ -12,8 +12,9 @@
                     <?= h($user->user_profile->first_name) ?>
                     <?= h($user->user_profile->last_name) ?>
                 </h3>
-                <h6>
-                </h6>
+                <h4 class="text-primary">
+                    <i><?= h($user->email) ?></i>
+                </h4>
                 <!-- <h6 class="proile-rating">Total No Of Posts: <span>
                     </span></h6> -->
                 <ul class="nav nav-tabs" id="myTab" role="tablist">

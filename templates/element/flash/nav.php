@@ -15,20 +15,11 @@
         </li>
 
       </ul>
-      <ul>
-        <?= $this->Form->create(null, ['type' => 'get']) ?>
-        <?= $this->Form->control('key', ['label' => false, 'value' => $this->request->getQuery('key'), 'style' => "
-    width: 500px;
-    margin-top: 18px;
-    border-radius:10px;
-    height:35px
-"]) ?>
-        <input type='submit' value="Submit" style="display: none;" />
-        <?= $this->Form->end() ?>
-      </ul>
+      
+      
       <?php
       if ($status->user->user_type == 1) {
-      ?>
+        ?>
         <ul class="navbar-nav me-auto ">
           <li class="nav-item">
             <?= $this->Html->link(__('Users'), ['controller' => 'users', 'action' => 'index'], ['class' => 'nav-link']) ?>
@@ -40,7 +31,11 @@
             <?= $this->Html->link(__('Product_Categories'), ['controller' => 'products', 'action' => 'indexproductc'], ['class' => 'nav-link']) ?>
           </li>
         </ul>
-      <?php } ?>
+        <?php } ?>
+        <?= $this->Form->create(null, ['type' => 'get','style'=>'display:flex;']) ?>
+        <input class="form-control mr-sm-2" type="text" id='key'name='key' placeholder="Search" aria-label="Search" style="padding-right: 300px;"/>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="float: right;">Search</button>
+        <?= $this->Form->end() ?>
       <ul class="navbar-nav me-auto " style="margin-left: auto;">
         <div class="btn-group">
           <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

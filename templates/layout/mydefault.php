@@ -55,7 +55,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->Flash->render() ?>
     <?= $this->fetch('content') ?>
   </div>
-  <footer>
+  <footer class="text-center mb-0">
     <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-dark">
       <!-- Copyright -->
       <div class="text-light mb-3 mb-md-0" style="margin-left:700px">

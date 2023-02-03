@@ -36,7 +36,10 @@ class ProductsController extends AppController
         $status = $this->UserProfile->get($uid, [
             'contain' => ['Users'],
         ]);
-        $productcat = $this->ProductCategories->newEmptyEntity();           
+        $this->paginate=[
+            'contain'=>'Products'
+        ];
+        $productcat = $this->ProductCategories->newEmptyEntity();
         if ($this->request->is(['patch', 'post', 'put'])) {
             $productcat = $this->ProductCategories->patchEntity($productcat, $this->request->getData());
             if ($this->ProductCategories->save($productcat)) {
@@ -46,6 +49,18 @@ class ProductsController extends AppController
             $this->Flash->error(__('The comment could not be saved. Please, try again.'));
         }
         $productCategories = $this->paginate($this->ProductCategories);
+        // $productCategories = $this->ProductCategories->find('all')->order(['id' => 'DESC']);
+        // echo '<pre>';
+        // foreach($productCategories as $p){
+        //     $i=0;
+        // foreach($p->products as $product){
+        //     $i++;
+        // }
+        // echo $p->category_name;
+        // echo ' = '.$i . '<br>';
+        // }
+        // print_r($productCategories);
+        // die;
 
         $this->set(compact('productCategories','status','productcat'));
     }
@@ -61,6 +76,7 @@ class ProductsController extends AppController
         ]);
         $this->paginate = [
             'contain' => ['ProductCategories'],
+            'order'=>['id'=>'desc'],
         ];
         $products = $this->paginate($this->Products);
 
@@ -118,41 +134,20 @@ class ProductsController extends AppController
             'contain' => [],
         ];
         $key = $this->request->getQuery('key');
-        if($key){
-            $query =$this->Products->find('all')
-                ->where(['Or'=>['product_title like'=>'%'.$key.'%','product_tags like'=>'%'.$key.'%']]);
-        }else{
-            $query=$this->Products;
-        }
-        $products = $this->paginate($query);
         if($id != null){
-            $products = $this->Products->find()->where(['product_category_id'=>$id])->all();
+            $products = $this->Products->find('all')->contain('ProductCategories')->where(['product_category_id'=>$id,'Products.status'=>'0'])->order(['Products.id' => 'DESC']);
+        }else if($key){
+            $products =$this->Products->find('all')->contain('ProductCategories')->where(['Or'=>['product_title like'=>'%'.$key.'%','product_tags like'=>'%'.$key.'%']]);
+        }else{
+            $products = $this->Products->find('all')->contain('ProductCategories')->where(['Products.status'=>'0'])->order(['Products.id' => 'DESC']);         
         }
-        $productc = $this->paginate($this->ProductCategories);
+        $productc = $this->ProductCategories->find()->where(['status'=>'0'])->all();           
+
         // echo '<pre>';
-        // print_r($productc);die;
+        // print_r($products);die;
 
         $this->set(compact('products','productc','status','id'));
     }
-//  ===========================delete category =======================
-
-// public function deletecat($id = null)
-// {
-//     $this->request->allowMethod(['post', 'delete']);
-//     $productCategory = $this->ProductCategories->get($id);
-//     $products = $this->Products->find()->where(['product_category_id'=>$id])->all();
-    
-//     // $this->ProductCategories->Products->deleteAll(array('product_category_id' => $id));
-//     dd($products);die;
-//     $this->ProductCategories->Products->ProductComments->deleteAll(array('product_id' => $id));
-//     if ($this->ProductCategories->delete($productCategory)) {
-//         $this->Flash->success(__('The product category has been deleted.'));
-//     } else {
-//         $this->Flash->error(__('The product category could not be deleted. Please, try again.'));
-//     }
-
-//     return $this->redirect(['action' => 'index']);
-// }
     /**
      * View method
      *
@@ -320,4 +315,7 @@ class ProductsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+     public $paginate=[
+        'limit'=>5,
+    ];
 }

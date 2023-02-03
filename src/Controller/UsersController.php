@@ -43,7 +43,8 @@ class UsersController extends AppController
         $this->paginate=[
             'contain' => ['UserProfile'],
         ];
-        $users = $this->paginate($this->Users);
+        $key = $this->request->getQuery('key');
+            $users = $this->paginate($this->Users);
         // dd($users);die;
         $this->set(compact('users','status'));
     }

@@ -40,8 +40,8 @@
                         <?php } else { ?>
                             <td class="text-center">Admin</td>
                         <?php } ?>
-                        <td class="text-center"><?php if($user->status == 2){
-                            echo $this->Form->postLink(__('Deactivate'), ['controller' => 'Users', 'action' => 'userstatus', $user->id,$user->status], ['confirm' => __('Are you sure you want to deactivate ?', $user->id),'class'=>'btn-btn-primary','escape'=>false,'title'=>'Deactive']) ;
+                        <td class="text-center abc"><?php if($user->status == 2){
+                            echo $this->Form->postLink(__('Deactivate'), ['controller' => 'Users', 'action' => 'userstatus', $user->id,$user->status], ['confirm' => __('Are you sure you want to deactivate ?', $user->id)],['class'=>'btn-btn-primary','escape'=>false,'title'=>'Deactive']) ;
                         }else{
                             echo $this->Form->postLink(__('Activate'), ['controller' => 'Users', 'action' => 'userstatus', $user->id,$user->status], ['confirm' => __('Are you sure you want to deactivate ?', $user->id),'class'=>'btn-btn-success','escape'=>false,'title'=>'Active']) ;
                         } ?></td>

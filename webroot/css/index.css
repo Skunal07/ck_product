@@ -33,9 +33,13 @@ body{
     /* font-weight: bold; */
     color: #009879;
 }
-footer{
-    bottom: 0;
-}
 h3{
     text-align: center;
+}
+.abc a {
+    border-radius: 10px;
+    background: #2cadad;
+    padding: 6px;
+    color: white;
+    text-decoration: none;
 }

@@ -1,19 +1,16 @@
    <!-- ======= Works Section ======= -->
    <section class="section site-portfolio">
        <div class="container">
+           <h2>Hey, It's Shoppinp Time</h2>
            <div class="row mb-5 align-items-center">
-               <div class="col-md-12 col-lg-6 mb-4 mb-lg-0" data-aos="fade-up">
-                   <h2>Hey, I'm Johan Stanworth</h2>
-                   <p class="mb-0">Freelance Creative &amp; Professional Graphics Designer</p>
-               </div>
                <div class="col-md-12 col-lg-6 text-start text-lg-end" data-aos="fade-up" data-aos-delay="100">
                    <div id="filters" class="filters">
-                    <?php 
-                    if($id == 0){
-                        echo $this->Html->link(__("All"), ['action' => 'productcategories'], ['class' => 'side-nav-link active profile-edit-btn']); 
-                    }else{
-                        echo $this->Html->link(__("All"), ['action' => 'productcategories'], ['class' => 'side-nav-link profile-edit-btn']); 
-                    }
+                       <?php
+                        if ($id == 0) {
+                            echo $this->Html->link(__("All"), ['action' => 'productcategories'], ['class' => 'side-nav-link active profile-edit-btn']);
+                        } else {
+                            echo $this->Html->link(__("All"), ['action' => 'productcategories'], ['class' => 'side-nav-link profile-edit-btn']);
+                        }
                         ?>
                        <?php
                         $count = 0;
@@ -25,7 +22,7 @@
                             } else {
                                 echo $this->Html->link(__($productc->category_name), ['action' => 'productcategories', $productc->id], ['class' => 'side-nav-link  profile-edit-btn']);
                             }
-                            if ($count == 5) {
+                            if ($count == 10) {
                                 break;
                             }
                             ?>
@@ -34,18 +31,20 @@
                </div>
            </div>
            <div id="portfolio-grid" class="row no-gutter" data-aos="fade-up" data-aos-delay="200">
-               <?php foreach ($products as $product) : ?>
-
-                   <div class="item web col-sm-6 col-md-4 col-lg-4 mb-4">
-                       <a href="http://localhost:8765/products/view/<?= $product->id ?>" class="item-wrap fancybox">
-                           <div class="work-info">
-                               <span><?= $product->product_title ?></span>
+               <?php foreach ($products as $product) :
+                        if ($product->product_category->status == 0) {
+                ?>
+                           <div class="item web col-sm-6 col-md-4 col-lg-4 mb-4">
+                               <a href="http://localhost:8765/products/view/<?= $product->id ?>" class="item-wrap fancybox">
+                                   <div class="work-info">
+                                       <span><?= $product->product_title ?></span>
+                                   </div>
+                                   <?= $this->Html->image(h($product->product_image), array('width' => '200px', 'class' => 'aimage')) ?>
+                               </a>
                            </div>
-                           <?= $this->Html->image(h($product->product_image), array('width' => '200px', 'class' => 'aimage')) ?>
-                       </a>
-                   </div>
-               <?php endforeach; ?>
-
+                       <?php
+                        }
+                endforeach; ?>
            </div>
        </div>
    </section><!-- End  Works Section -->
