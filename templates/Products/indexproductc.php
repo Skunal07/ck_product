@@ -19,6 +19,7 @@
                     <input type="text" name="category_name" id="category_name" class="form-control mr-3" placeholder="Category Name">
                     <button class="btn btn-primary" type="submit">Add Category</button>
                 </div>
+                <?= $this->Form->end() ?>
                 <table class="styled-table">
                     <thead>
                         <tr>
@@ -37,25 +38,30 @@
 
                         foreach ($productCategories as $productCategory) :
                             $i = 0;
+                            
                         ?>
                             <tr>
                                 <td class="text-center"><?= $id++ ?></td>
                                 <td class="text-center"><?= h($productCategory->category_name) ?></td>
                                 <?php foreach ($productCategory->products as $product) { ?>
-                                    <?php $i++;
-                                        } ?> 
+                                <?php $i++;
+                                } ?>
                                 <td class="text-center"><?= $i ?></td>
-                                <td class="text-center abc"><?php if ($productCategory->status == 1) {
-                                                            echo $this->Form->postLink(__('Deactivate'), ['controller' => 'Products', 'action' => 'productcstatus', $productCategory->id, $productCategory->status], ['confirm' => __('Are you sure you want to deactivate ?', $productCategory->id), 'class' => 'abc', 'escape' => false, 'title' => 'Deactive']);
-                                                        } else {
-                                                            echo $this->Form->postLink(__('Activate'), ['controller' => 'Products', 'action' => 'productcstatus', $productCategory->id, $productCategory->status], ['confirm' => __('Are you sure you want to deactivate ?', $productCategory->id), 'class' => 'btn-btn-success', 'escape' => false, 'title' => 'Active']);
-                                                        } ?>
+                                <td class="text-center abc">
+                                    <?php
+                                        if ($productCategory->status == 1) {
+                                            echo $this->Form->postLink(__('Deactivate'), ['controller' => 'Products', 'action' => 'productcstatus', $productCategory->id, $productCategory->status], ['confirm' => __('Are you sure you want to deactivate ?')]);
+                                            
+                                        } elseif ($productCategory->status == 0) {
+                                            echo $this->Form->postLink(__('Activate'), ['controller' => 'Products', 'action' => 'productcstatus', $productCategory->id, $productCategory->status], ['confirm' => __('Are you sure you want to deactivate ?')]);
+                                           
+                                        } 
+                                    ?>
                                 </td>
                                 <td class="text-center"><?= h($productCategory->created_date) ?></td>
                                 <td class="text-center"><?= h($productCategory->modified_date) ?></td>
                                 <td class="actions">
                                     <?= $this->Html->link(__('View'), ['action' => 'productcategories', $productCategory->id]) ?>
-                                    <?= $this->Html->link(__('Edit'), ['controller' => 'ProductCategories', 'action' => 'edit', $productCategory->id]) ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

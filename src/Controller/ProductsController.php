@@ -92,12 +92,14 @@ class ProductsController extends AppController
  // ================product category-status===========
  public function productcstatus($id=null,$status = null)
  {
+    
      $productcstatus = $this->ProductCategories->get($id);
      if($status == 1){
          $productcstatus->status = 0;
      }else{
          $productcstatus->status = 1;
      }
+     
      if($this->ProductCategories->save($productcstatus)){
          $this->Flash->success(__('The user status has been changed.'));
      }
@@ -110,6 +112,7 @@ class ProductsController extends AppController
  public function productstatus($id=null,$status = null)
  {
      $productstatus = $this->Products->get($id);
+    //  echo $status;die;
      if($status == 1){
          $productstatus->status = 0;
      }else{
