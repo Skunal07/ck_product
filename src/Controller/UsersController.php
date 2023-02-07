@@ -46,10 +46,21 @@ class UsersController extends AppController
         $this->paginate=[
             'contain' => ['UserProfile'],
         ];
-        $key = $this->request->getQuery('key');
+        $status=$this->request->getQuery('status');
+        if($status != null ){
+            dd($status);
+            $users = $this->Users->find('all')->contain('UserProfile')->where(['status'=>$status]);       
+        }else{
             $users = $this->paginate($this->Users);
-        // dd($users);die;
+        }
+
         $this->set(compact('users','status'));
+        if($this->request->is('ajax')){
+            echo "dfd";
+        // $this->autoRender=false;
+        // $this->render('element/flash/user_index');
+        // dd($users);die;
+    }
     }
 
     

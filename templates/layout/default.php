@@ -31,10 +31,16 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
     <?= $this->Html->css(['normalize.min', 'milligram.min', 'cake']) ?>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
+
 </head>
+<?=  $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')); ?>
+<script>
+   var csrfToken = $('meta[name="csrfToken"]').attr('content');
+</script>
 <body>
     <nav class="top-nav">
         <div class="top-nav-title">

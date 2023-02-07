@@ -4,6 +4,15 @@
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
+        <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown button
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item active" href=""  >Active</a>
+    <a class="dropdown-item inactive" href="" >inActive</a>
+  </div>
+</div>
         <table class="styled-table">
             <thead>
                 <tr>
@@ -21,6 +30,7 @@
                 </tr>
             </thead>
             <tbody>
+
                 <?php
                 $i = 1;
                 foreach ($users as $user) :
@@ -73,3 +83,40 @@
 </div>
 </div>
 <?= $this->Html->css('index', ['block' => 'css']); ?>
+
+<script>
+    $(document).ready(function(){
+        $('.active').click(function(e){
+            var status = 1;
+            e.preventDefault();
+            $.ajax({
+                url:'http://localhost:8765/users/index',
+                type:'JSON',
+                method:'get',
+                data:{
+                    'status':status,
+                },
+                success:function(response){
+                    console.log(response)
+                }
+            });
+        });
+        $('.inactive').click(function(e){
+            var status = 2;
+            e.preventDefault();
+            $.ajax({
+                url:'http://localhost:8765/users/index',
+                type:'JSON',
+                method:'get',
+                data:{
+                    'status':status,
+                },
+                success:function(response){
+                    // var data = JSON.parse(response)
+                    console.log(response)
+
+                }
+            });
+        });
+    })
+</script>
