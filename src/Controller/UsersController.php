@@ -32,35 +32,71 @@ class UsersController extends AppController
         // $this->loadComponent('Rahul');        
     }
 
+    // public function index()
+    // {
+    //     $this->viewBuilder()->setLayout('admin');
+    //     $user = $this->Authentication->getIdentity();
+    //     $uid = $user->id;
+    //     if($user->user_type == 0){
+    //         return $this->redirect(['controller'=>'products','action' => 'productcategories',]);
+    //     }
+    //     $this->paginate=[
+    //         'contain' => ['UserProfile'],
+    //     ];
+    //     // dd($status);
+    //     $status = $this->UserProfile->get($uid, [
+    //         'contain' => ['Users'],
+    //     ]);
+        
+    //     $users = $this->paginate($this->Users);
+    //     $this->set(compact('users','status'));
+    //     $statuss=$this->request->getQuery('stat');
+    //     echo $statuss;
+    //     if($statuss){
+    //         $users = $this->Users->find('all')->contain('UserProfile')->where(['users.status'=>$statuss]); 
+    //         // dd($users);      
+    //         // dd($users);
+    //     }else{
+    //         $users = $this->paginate($this->Users);
+    //     }
+    //     $this->set(compact('users','status'));
+    //     if($this->request->is('ajax')){
+    //         $this->autoRender=false;
+    //         $this->layout=false;
+    //         $this->render('element/flash/user_index');
+    //         exit;
+    //         // dd($users);die;
+    //     }
+    // }
     public function index()
     {
         $this->viewBuilder()->setLayout('admin');
         $user = $this->Authentication->getIdentity();
         $uid = $user->id;
-        if($user->user_type == 0){
-            return $this->redirect(['controller'=>'products','action' => 'productcategories',]);
-        }
+        $this->paginate=[
+                    'contain' => ['UserProfile'],
+                ];
         $status = $this->UserProfile->get($uid, [
             'contain' => ['Users'],
         ]);
-        $this->paginate=[
-            'contain' => ['UserProfile'],
-        ];
-        $status=$this->request->getQuery('status');
-        if($status != null ){
-            dd($status);
-            $users = $this->Users->find('all')->contain('UserProfile')->where(['status'=>$status]);       
-        }else{
-            $users = $this->paginate($this->Users);
-        }
-
+        $users = $this->paginate($this->Users);
+        // $users = $this->Users->find('all')->contain('UserProfile');
+        // dd($users);
         $this->set(compact('users','status'));
-        if($this->request->is('ajax')){
-            echo "dfd";
-        // $this->autoRender=false;
-        // $this->render('element/flash/user_index');
-        // dd($users);die;
-    }
+        $statuss = $this->request->getQuery('stat');
+        if ($statuss == null || $statuss == 'null') {
+            // $users = $this->Users->find('all')->contain('UserProfile');
+        $users = $this->paginate($this->Users);
+        } else {
+            $users = $this->Users->find('all')->contain('UserProfile')->where(['status' => $statuss]);
+        }
+        $this->set(compact("users"));
+        if ($this->request->is('ajax')) {
+            $this->autoRender = false;
+            //$this->layout = false;
+            $this->viewBuilder()->setLayout(null);
+            $this->render('/element/flash/user_index');
+        }
     }
 
     
@@ -79,6 +115,10 @@ class UsersController extends AppController
     // ================user-status===========
     public function userstatus($id=null,$status = null)
     {
+        $this->request->allowMethod(['post']);
+        $id = $_POST['id'];
+        $status = $_POST['status'];
+        
         $userstatus = $this->Users->get($id);
         if($status == 1){
             $userstatus->status = 2;
@@ -86,12 +126,13 @@ class UsersController extends AppController
             $userstatus->status = 1;
         }
         if($this->Users->save($userstatus)){
-            $this->Flash->success(__('The user status has been changed.'));
+            echo json_encode(array(
+                "status" => $status,
+                "id" => $id,
+            ));
+            exit;
         }
-          return  $this->redirect(['action'=>'index']);
-        $this->set(compact('userstatus'));
     }
-
     /**
      * View method
      *
@@ -263,11 +304,7 @@ class UsersController extends AppController
              $user = $this->Authentication->getIdentity();
             if($user->status == 2){
                 $this->Flash->error(__('Invalid email or password'));
-                $redirect = $this->request->getQuery('redirect', [
-                    'controller' => 'Users',
-                    'action' => 'logout',
-                ]);
-                return $this->redirect($redirect);
+            $this->Authentication->logout();
             }else if($user->status == 1){
               
             // redirect to /articles after login success
@@ -278,8 +315,8 @@ class UsersController extends AppController
                 'action' => 'productcategories',
             ]);
 
-            return $this->redirect($redirect);
         }
+            return $this->redirect($redirect);
     }
         // display error if user submitted and authentication failed
         if ($this->request->is('post') && !$result->isValid()) {

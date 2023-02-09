@@ -1,83 +1,26 @@
 <div class="users index content">
     <h3 class="text_center"><?= __('Users List') ?></h3>
-<div class="table-responsive"  style="overflow: hidden;">
-    <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-        <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown button
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item active" href=""  >Active</a>
-    <a class="dropdown-item inactive" href="" >inActive</a>
-  </div>
-</div>
-        <table class="styled-table">
-            <thead>
-                <tr>
-                    <th class="text-center"><?= __('Id') ?></th>
-                    <th class="text-center"><?= __('Image') ?></th>
-                    <th class="text-center"><?= __('Name') ?></th>
-                    <th class="text-center"><?= __('Email') ?></th>
-                    <th class="text-center"><?= __('Address') ?></th>
-                    <th class="text-center"><?= __('Phone No') ?></th>
-                    <th class="text-center"><?= __('User_type') ?></th>
-                    <th class="text-center"><?= __('Status') ?></th>
-                    <th class="text-center"><?= __('Created Date') ?></th>
-                    <th class="text-center"><?= __('Modified Date') ?></th>
-                    <th class="text-center"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-
-                <?php
-                $i = 1;
-                foreach ($users as $user) :
-
-                    if ($status->id == $user->id) {
-                        continue;
-                    } ?>
-                    <tr>
-                        <td class="text-center"><?= $this->Number->format($i++) ?></td>
-                        <td class="text-center"><?= $this->Html->image(h($user->user_profile->profile_image), array('width' => '50px')) ?></td>
-                        <td class="text-center"><?= h($user->user_profile->first_name) ?><?= h($user->user_profile->last_name) ?></td>
-                        <td class="text-center"><?= h($user->email) ?></td>
-                        <td class="text-center"><?= h($user->user_profile->address) ?></td>
-                        <td class="text-center"><?= h($user->user_profile->contact) ?></td>
-                        <?php if ($user->user_type == 0) { ?>
-                            <td class="text-center">User</td>
-                        <?php } else { ?>
-                            <td class="text-center">Admin</td>
-                        <?php } ?>
-                        <td class="text-center abc"><?php if($user->status == 2){
-                            echo $this->Form->postLink(__('Deactivate'), ['controller' => 'Users', 'action' => 'userstatus', $user->id,$user->status], ['confirm' => __('Are you sure you want to deactivate ?', $user->id)],['class'=>'btn-btn-primary','escape'=>false,'title'=>'Deactive']) ;
-                        }else{
-                            echo $this->Form->postLink(__('Activate'), ['controller' => 'Users', 'action' => 'userstatus', $user->id,$user->status], ['confirm' => __('Are you sure you want to deactivate ?', $user->id),'class'=>'btn-btn-success','escape'=>false,'title'=>'Active']) ;
-                        } ?></td>
-                        <td class="text-center"><?= h($user->user_profile->created_date) ?></td>
-                        <td class="text-center"><?= h($user->user_profile->modified_date) ?></td>
-                        <td class="actions">
-                            <?= $this->Html->link(__('View'), ['action' => 'userprofile', $user->id]) ?>
-                            <?= $this->Html->link(__('Edit'), ['action' => 'edit', $user->id]) ?>
-                            <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id)]) ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-        <div class="col-md-2"></div>
-    </div>
-        <div class="paginator">
-            <ul class="pagination">
-                <?= $this->Paginator->first('<< ' . __('first')) ?>
-                <?= $this->Paginator->prev('< ' . __('previous')) ?>
-                <?= $this->Paginator->numbers() ?>
-                <?= $this->Paginator->next(__('next') . ' >') ?>
-                <?= $this->Paginator->last(__('last') . ' >>') ?>
-            </ul>
-            <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+    <div class="table-responsive" style="overflow: hidden;">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="dropdown">
+                    <?= $this->Form->select(
+                        'status',
+                        [
+                            'null' => 'All Users',
+                            '1' => 'Active Users',
+                            '2' => 'Inactive Users',
+                        ],
+                        ['id' => 'statusai', 'class' => 'btn btn-success active'],
+                    );
+                    ?>
+                </div>
+                <div class="myapp">
+                    <?= $this->element('flash/user_index'); ?>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
         </div>
     </div>
 </div>
@@ -85,35 +28,90 @@
 <?= $this->Html->css('index', ['block' => 'css']); ?>
 
 <script>
-    $(document).ready(function(){
-        $('.active').click(function(e){
-            var status = 1;
-            e.preventDefault();
+    $(document).ready(function() {
+
+        $('#statusai').change(function() {
+            // alert('dd0');
+            var status = $(this).val();
+            // alert(status);
+            // return false;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken // this is defined in app.php as a js variable
+                }
+            });
+            // e.preventDefault();
             $.ajax({
-                url:'http://localhost:8765/users/index',
-                type:'JSON',
-                method:'get',
-                data:{
-                    'status':status,
+                url: "http://localhost:8765/index",
+                type: "JSON",
+                method: "GET",
+                data: {
+                    'stat': status,
                 },
-                success:function(response){
-                    console.log(response)
+                success: function(response) {
+                    // alert(response);
+                    $('.myapp').html('');
+                    $('.myapp').append(response);
                 }
             });
         });
-        $('.inactive').click(function(e){
+
+        $('body').on('click', '.inac', function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken // this is defined in app.php as a js variable
+                }
+            });
+            var status = $(this).val();
+            if (status == 1) {
+                $(this).val('2');
+            } else {
+                $(this).val('1');
+            }
+            var id = $(this).prev('input').val();
+            $.ajax({
+                url: "http://localhost:8765/users/userstatus",
+                type: "JSON",
+                method: "POST",
+                data: {
+                    'id': id,
+                    'status': status,
+                },
+                success: function(response) {
+                    // alert(response)
+                }
+            });
+        });
+        // $('.active').click(function(e){
+        //     var status = 1;
+        //     // alert(status)
+        //     e.preventDefault();
+        //     $.ajax({
+        //         url:'/index',
+        //         type:'JSON',
+        //         method:'get',
+        //         data:{
+        //             'stat':status,
+        //         },
+        //         success:function(response){
+        //            $('.tablebody').html(response);
+        //         }
+        //     });
+        // });
+        $('.inactive').click(function(e) {
             var status = 2;
             e.preventDefault();
             $.ajax({
-                url:'http://localhost:8765/users/index',
-                type:'JSON',
-                method:'get',
-                data:{
-                    'status':status,
+                url: '/index',
+                type: 'JSON',
+                method: 'get',
+                data: {
+                    'stat': status,
                 },
-                success:function(response){
+                success: function(response) {
+                    $('.tablebody').html(response);
                     // var data = JSON.parse(response)
-                    console.log(response)
+                    // console.log(response)
 
                 }
             });

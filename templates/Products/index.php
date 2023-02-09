@@ -33,7 +33,7 @@
                             <tr>
                                 <td><?= $id++ ?></td>
                                 <td><?= h($product->product_title) ?></td>
-                                <td><?= $product->has('product_category') ? $this->Html->link($product->product_category->id, ['controller' => 'ProductCategories', 'action' => 'view', $product->product_category->id]) : '' ?></td>
+                                <td><?= $product->product_category->category_name ?></td>
                                 <td><?= h($product->product_image) ?></td>
                                 <td class="text-center abc"><?php if ($product->status == 1) {
                                                             echo $this->Form->postLink(__('Deactivate'), ['controller' => 'Products', 'action' => 'productstatus', $product->id, $product->status], ['confirm' => __('Are you sure you want to deactivate ?', $product->id), 'class' => 'btn-btn-primary', 'escape' => false, 'title' => 'Deactive']);
