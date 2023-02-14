@@ -22,7 +22,7 @@
                                 <i class="fa fa-images"></i>
                             </span>
                         </div>
-                        <input id="user-profile-profile-image" type="file" name="user_profile[profile_image]" class="form-control bg-white border-left-0 border-md">
+                        <input id="user-profile-profile-image" type="file" name="user_profile[profile_image]" class="form-control bg-white border-left-0 border-md">        
                     </div>
                     <!-- First Name -->
                     <div class="input-group col-lg-6 mb-4">

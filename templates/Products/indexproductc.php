@@ -43,8 +43,8 @@
                             <tr>
                                 <td class="text-center"><?= $id++ ?></td>
                                 <td class="text-center"><?= h($productCategory->category_name) ?></td>
-                                <?php foreach ($productCategory->products as $product) { ?>
-                                <?php $i++;
+                                <?php foreach ($productCategory->products as $product) { 
+                                 $i++;
                                 } ?>
                                 <td class="text-center"><?= $i ?></td>
                                 <td class="text-center abc">

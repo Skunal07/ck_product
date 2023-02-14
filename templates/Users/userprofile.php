@@ -3,7 +3,6 @@
         <div class="col-md-4">
             <div class="profile-img">
                 <?= $this->Html->image(h($user->user_profile->profile_image), array('width' => '200px')) ?>
-
             </div>
         </div>
         <div class="col-md-6">
@@ -114,32 +113,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="tab-content profile-tab" id="post_user">
-                < <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"> -->
-                    <!-- <div class="row">
-                        <?php if ($count > 0) {
-                            foreach ($user->posts as $post) : ?>
-                                <div class="col-md-3 polaroid">
-
-                                    <?php echo $this->Html->link(
-                                        $this->Html->image($post->image, array('height' => '200', 'width' => '150', 'class' => 'abc')),
-                                        array(
-                                            'controller' => 'Users',
-                                            'action' => 'viewpost', $post->id
-                                        ),
-                                        array('escape' => false)
-                                    ); ?>
-                                    <p class="text-center"><?= h($post->title) ?></p>
-                                </div>
-                            <?php
-                            endforeach;
-                            ?>
-                    </div>
-                <?php  } else {
-                            echo '<img src="/img/nopost.png" class="noimage" alt="" >';
-                        }  ?>
-                </div>
-            </div> -->
         </div>
     </div>
 <?= $this->Html->css('userprofile', ['block' => 'css']); ?>

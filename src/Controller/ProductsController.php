@@ -146,7 +146,7 @@ class ProductsController extends AppController
         if($id != null){
             $products = $this->Products->find('all')->contain('ProductCategories')->where(['product_category_id'=>$id,'Products.status'=>'0'])->order(['Products.id' => 'DESC']);
         }else if($key){
-            $products =$this->Products->find('all')->contain('ProductCategories')->where(['Products.status'=>0,'Or'=>['product_title like'=>'%'.$key.'%','product_tags like'=>'%'.$key.'%']]);
+            $products =$this->Products->find('all')->contain('ProductCategories')->where(['Products.status'=>0,'Or'=>['product_title like'=>'%'.$key.'%','product_tags like'=>'%'.$key.'%','category_name like'=>'%'.$key.'%']]);
         }else{
             $products = $this->Products->find('all')->contain('ProductCategories')->where(['Products.status'=>'0'])->order(['Products.id' => 'DESC']);         
         }
